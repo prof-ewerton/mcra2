@@ -11,22 +11,108 @@ os.environ["GOOGLE_API_KEY"] = st.secrets["GEMINI_API_KEY"]
 llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature = 1)
 
 
-def read_pdf(file_pdf):
-    reader = PdfReader(file_pdf)
-    texto_pdf = ""
-    for page in reader.pages: 
-        texto_pdf += page.extract_text()
-    return texto_pdf
-# TESTE read_pdf
-#text = read_pdf("article.pdf")
-#print(text)
+# def read_pdf(file_pdf):
+#     reader = PdfReader(file_pdf)
+#     texto_pdf = ""
+#     for page in reader.pages: 
+#         texto_pdf += page.extract_text()
+#     return texto_pdf
+# # TESTE read_pdf
+# #text = read_pdf("article.pdf")
+# #print(text)
 
-############# TOOL1
-read_pdf_tool = Tool(
-    name="Leitor de arquivos PDF",
-    description="Esta ferramenta possui um argumento com o valor {file_pdf} e retorna o conteúdo do arquivo em formato de texto simples.",
-    func=lambda file_pdf: read_pdf(file_pdf),
-)
+# ############# TOOL1
+# read_pdf_tool = Tool(
+#     name="Leitor de arquivos PDF",
+#     description="Esta ferramenta possui um argumento com o valor {file_pdf} e retorna o conteúdo do arquivo em formato de texto simples.",
+#     func=lambda file_pdf: read_pdf(file_pdf),
+# )
+
+
+
+
+# ############# AGENT1
+# agente_extrator_de_conceitos_de_artigos = Agent(
+#     role="Agente extrator de conceitos do arquivo {file_pdf}",
+#     goal="Ler o texto do artigo científico contido no arquivo {file_pdf} e extrair vários conceitos relevantes sotre {topic} para análise subsequente por outro agente.",
+#     backstory="Você é um especialista em {topic} em extrair vários conceitos de artigos científicos. Seu papel é garantir que todos os conceitos relevantes do arquivo {file_pdf} sobre o tema {topic} sejam extraídos com precisão, facilitando a análise subsequente por outros agentes.",
+#     verbose=True,
+#     llm=llm,
+#     max_iter=3,
+#     memory=True,
+#     tools=[read_pdf_tool]
+# )
+
+# ############# TASK1
+# tarefa_extrair_conceitos_sobre_um_topico = Task(
+#     description="Extrair vários conceitos relevantes do arquivo {file_pdf} para análise subsequente.",
+#     expected_output="""Retorna um documento em inglês formatado em marckdonw contendo o título do artigo e uma tabela no formato markdown contendo as colunas: conceito e explicação. Onde conceito são os conceitos importantes extraídos de {file_pdf} e explicação é um parágrafo extraído de {file_pdf} onde consta o uso do conceito.
+#     e.g.
+#     # Título do artigo
+#     | Concept | Explanation |
+#     """,
+#     agent=agente_extrator_de_conceitos_de_artigos,
+#     #output_file="concepts.md"
+# )
+
+
+
+# # LEITOR DE ONTOLOGIA OWL
+# def read_owl(file_onto):
+#     onto = get_ontology(file_onto).load()
+#     response = ""
+#     for cls in onto.classes():
+#         response = response + cls.name + " "
+#         if cls.comment:
+#             for descricao in cls.comment: 
+#                 response = response + descricao + " "
+#         response = response + "\n"
+#     return response
+# # TESTE read_owl
+# #ontology = read_owl("D:/Workspaces/Python/tentativa7/onto.owl")
+# #print(f"Ontologia carregada: {ontology}")
+
+# ############# TOOL2
+# read_onto_tool = Tool(
+#     #name="Read Ontology Tool",
+#     #description="This tool receives the argument named onto_path with the value {onto_path}",
+#     name="Ferramenta leitora de ontologia OWL",
+#     description="Esta ferramenta recebe um argumento com o valor {file_onto} e retorna uma lista de classes da ontologia OWL.",
+#     func=lambda file_onto: read_owl(file_onto),
+# )
+# #response = read_onto_tool.run("D:/Workspaces/Python/tentativa7/onto.owl")
+# #print(response)
+
+# ############# AGENT2
+# agente_extrator_de_classes_de_ontologia = Agent(
+#     role="Agente extrator de classes de ontologia do arquivo {file_onto}",
+#     goal="Ler uma ontologia no arquivo {file_onto} e extrair uma lista de classes para análise subsequente por outro agente.",
+#     backstory="Você é um especialista em ontologia e consegue entregar uma lista de classes para análise subsequente por outros agentes.",
+#     verbose=True,
+#     llm=llm,
+#     max_iter=3,
+#     memory=True,
+#     tools=[read_onto_tool]
+# )
+
+# ############# TASK2
+# tarefa_extrair_classes_de_uma_ontologia = Task(
+#     description="Extrair todas as classes ontológicas de uma ontologia no arquivo {file_onto} para análise subsequente por outro agente.",
+#     expected_output="""Retorna um documento em inglês formatado em markdown com uma tabela com duas colunas: Class e Annotation.""",
+#     agent=agente_extrator_de_classes_de_ontologia,
+#     #output_file="classes.md"
+# )
+
+
+############# TOOL SEM USO NO MOMENTO
+# read_onto_txt_tool = Tool(
+#     name="Leitor de arquivos de ontologia em OWL",
+#     description="Esta ferramenta possui um argumento com o valor {file_onto} e retorna a ontologia do arquivo em formato de texto simples.",
+#     func=lambda file_onto: read_onto_txt(file_onto),
+# )
+#response = read_onto_txt_tool.run("D:/Workspaces/Python/tentativa7/onto.owl")
+#print(response)
+
 
 def entrega_texto_artigo():
     return texto_artigo
@@ -45,91 +131,6 @@ adquiri_ontologia_tool = Tool(
     description="Esta ferramenta retorna um texto de uma ontologia em owl.",
     func=lambda: entrega_texto_ontologia(),
 )
-
-
-
-############# AGENT1
-agente_extrator_de_conceitos_de_artigos = Agent(
-    role="Agente extrator de conceitos do arquivo {file_pdf}",
-    goal="Ler o texto do artigo científico contido no arquivo {file_pdf} e extrair vários conceitos relevantes sotre {topic} para análise subsequente por outro agente.",
-    backstory="Você é um especialista em {topic} em extrair vários conceitos de artigos científicos. Seu papel é garantir que todos os conceitos relevantes do arquivo {file_pdf} sobre o tema {topic} sejam extraídos com precisão, facilitando a análise subsequente por outros agentes.",
-    verbose=True,
-    llm=llm,
-    max_iter=3,
-    memory=True,
-    tools=[read_pdf_tool]
-)
-
-############# TASK1
-tarefa_extrair_conceitos_sobre_um_topico = Task(
-    description="Extrair vários conceitos relevantes do arquivo {file_pdf} para análise subsequente.",
-    expected_output="""Retorna um documento em inglês formatado em marckdonw contendo o título do artigo e uma tabela no formato markdown contendo as colunas: conceito e explicação. Onde conceito são os conceitos importantes extraídos de {file_pdf} e explicação é um parágrafo extraído de {file_pdf} onde consta o uso do conceito.
-    e.g.
-    # Título do artigo
-    | Concept | Explanation |
-    """,
-    agent=agente_extrator_de_conceitos_de_artigos,
-    #output_file="concepts.md"
-)
-
-
-
-# LEITOR DE ONTOLOGIA OWL
-def read_owl(file_onto):
-    onto = get_ontology(file_onto).load()
-    response = ""
-    for cls in onto.classes():
-        response = response + cls.name + " "
-        if cls.comment:
-            for descricao in cls.comment: 
-                response = response + descricao + " "
-        response = response + "\n"
-    return response
-# TESTE read_owl
-#ontology = read_owl("D:/Workspaces/Python/tentativa7/onto.owl")
-#print(f"Ontologia carregada: {ontology}")
-
-############# TOOL2
-read_onto_tool = Tool(
-    #name="Read Ontology Tool",
-    #description="This tool receives the argument named onto_path with the value {onto_path}",
-    name="Ferramenta leitora de ontologia OWL",
-    description="Esta ferramenta recebe um argumento com o valor {file_onto} e retorna uma lista de classes da ontologia OWL.",
-    func=lambda file_onto: read_owl(file_onto),
-)
-#response = read_onto_tool.run("D:/Workspaces/Python/tentativa7/onto.owl")
-#print(response)
-
-############# AGENT2
-agente_extrator_de_classes_de_ontologia = Agent(
-    role="Agente extrator de classes de ontologia do arquivo {file_onto}",
-    goal="Ler uma ontologia no arquivo {file_onto} e extrair uma lista de classes para análise subsequente por outro agente.",
-    backstory="Você é um especialista em ontologia e consegue entregar uma lista de classes para análise subsequente por outros agentes.",
-    verbose=True,
-    llm=llm,
-    max_iter=3,
-    memory=True,
-    tools=[read_onto_tool]
-)
-
-############# TASK2
-tarefa_extrair_classes_de_uma_ontologia = Task(
-    description="Extrair todas as classes ontológicas de uma ontologia no arquivo {file_onto} para análise subsequente por outro agente.",
-    expected_output="""Retorna um documento em inglês formatado em markdown com uma tabela com duas colunas: Class e Annotation.""",
-    agent=agente_extrator_de_classes_de_ontologia,
-    #output_file="classes.md"
-)
-
-
-############# TOOL SEM USO NO MOMENTO
-# read_onto_txt_tool = Tool(
-#     name="Leitor de arquivos de ontologia em OWL",
-#     description="Esta ferramenta possui um argumento com o valor {file_onto} e retorna a ontologia do arquivo em formato de texto simples.",
-#     func=lambda file_onto: read_onto_txt(file_onto),
-# )
-#response = read_onto_txt_tool.run("D:/Workspaces/Python/tentativa7/onto.owl")
-#print(response)
-
 
 ############ AGENT3
 agente_comparador_de_conceitos_com_ontologia = Agent(
