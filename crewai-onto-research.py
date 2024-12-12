@@ -11,78 +11,6 @@ os.environ["GOOGLE_API_KEY"] = st.secrets["GEMINI_API_KEY"]
 llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature = 1)
 
 
-
-
-
-
-# scientific_article_reader_agent = Agent(
-#     role="Reader of Scientific Articles in {topic}",
-#     goal="Read the texts of scientific articles {topic} in  and extract the relevant content.",
-#     backstory="You are a specialist in reading and extracting text from scientific articles in {topic}. Your role is to ensure that all relevant content from learning analytics articles is accurately extracted, facilitating subsequent analysis by other agents.",
-#     verbose=True,
-#     llm=llm,
-#     max_iter=3,
-#     memory=True,
-#     tools=[read_pdf_tool]
-# )
-
-# scientific_article_reader_task = Task(
-#     description="""Read the full text of scientific articles in file_path is {file_pdf} related to learning analytics.
-#     Extract the relevant content that will be used for subsequent analysis.""",
-#     expected_output="Returns the title of the article and a markdown formatted table with the columns: concept and explanation. Where concept are the important concepts about {topic} extracted from the article and explanation is a paragraph from the article where its usage is found.",
-#     agent=scientific_article_reader_agent,
-# )
-
-# ontology_relationship_analyst_agent = Agent(
-#     role="Ontology Relationship Analyst in {topic}",
-#     goal="Relate the terms table extracted from scientific articles in {topic} to the classes of a predefined ontology.",
-#     backstory="You are an analyst specialized in relating concepts from scientific articles in {topic} to ontologies. With a keen eye for detail and a deep understanding of learning analytics, you identify and map the concepts extracted from the texts to the appropriate classes in the ontology, providing a clear and precise mapping.",
-#     verbose=True,
-#     llm=llm,
-#     max_iter=3,
-#     memory=True,
-#     tools=[read_onto_txt_tool, read_pdf_tool]
-# )
-
-# ontology_relationship_task = Task(
-#     description="""Analyze the text extracted from the Reader of Scientific Articles in {file_pdf} and relate the found terms to the classes of a predefined from ontology in {file_onto}.
-#     Identify and list the terms that correspond to the classes of the ontology in {file_onto}.""",
-#     expected_output="""A list with the terms found in the article and their respective classes in the ontology, along with explanations of the relationships.
-#     Another separate list with the terms and your explanations that were not found in the ontology.
-#     e.g.
-#     # FOUNDED 
-#     | term_text | class_ontology | relationship_explanation |
-#     | --------- | -------------- | ------------------------ |
-#     | "term" | "class" | "Paragraph extracted from the text that relates the term to the ontology class." |
-#     | ... | ... | ... |
-#     e.g.
-#     # NOT FOUNDED
-#     | term_text | relationship_explanation |
-#     | --------- | -------------- | ------------------------ |
-#     | "term" | "A paragraph where the word fits into the context of the article." |
-#     | ... | ... |
-#     Formatted as markdown without '```'.""",
-#     agent=ontology_relationship_analyst_agent,
-#     output_file="report.md"
-# )
-
-
-# crew = Crew(
-#     #agents=[scientific_article_reader_agent, ontology_relationship_analyst_agent],
-#     #tasks=[scientific_article_reader_task, ontology_relationship_task],
-#     agents=[ontology_relationship_analyst_agent],
-#     tasks=[ontology_relationship_task],
-#     process=Process.hierarchical,
-#     verbose=2,
-#     full_output=True,
-#     share_crew=False,
-#     manager_llm=llm,
-#     max_iter=3,
-# )
-
-
-
-
 def read_pdf(file_pdf):
     reader = PdfReader(file_pdf)
     texto_pdf = ""
@@ -93,22 +21,32 @@ def read_pdf(file_pdf):
 #text = read_pdf("article.pdf")
 #print(text)
 
-
-# read_pdf_tool = Tool(
-#     name="Read PDF Tool",
-#     description="This tool receives the argument named file_path with the value {file_path} and returns the content in plain text format.",
-#     func=lambda file_path: read_pdf(file_path),
-# )
-
-#response = read_pdf_tool.run("article.pdf")
-#print(response)
-
 ############# TOOL1
 read_pdf_tool = Tool(
     name="Leitor de arquivos PDF",
     description="Esta ferramenta possui um argumento com o valor {file_pdf} e retorna o conteúdo do arquivo em formato de texto simples.",
     func=lambda file_pdf: read_pdf(file_pdf),
 )
+
+def entrega_texto_artigo():
+    return texto_artigo
+
+adquiri_artigo_tool = Tool(
+    name="Ferramenta que adquire um artigo",
+    description="Esta ferramenta retorna um texto de artigo.",
+    func=lambda: entrega_texto_artigo(),
+)
+
+def entrega_texto_ontologia():
+    return texto_onto
+
+adquiri_ontologia_tool = Tool(
+    name="Ferramenta que adquire uma ontologia",
+    description="Esta ferramenta retorna um texto de uma ontologia em owl.",
+    func=lambda: entrega_texto_ontologia(),
+)
+
+
 
 ############# AGENT1
 agente_extrator_de_conceitos_de_artigos = Agent(
@@ -195,14 +133,14 @@ tarefa_extrair_classes_de_uma_ontologia = Task(
 
 ############ AGENT3
 agente_comparador_de_conceitos_com_ontologia = Agent(
-    role="Agente comparador de conceitos extraídos de um artigo fornecido por outro agente com classes ontológicas extraídas de uma ontologia também fornecida por outro agente",
-    goal="Comparar os conceitos extraídos de um arquivo com uma lista de classes ontológicas e listar os conceitos que estão presentes na ontologia e os que estão ausentes.",
+    role="Agente comparador de conceitos extraídos de um artigo fornecido por uma tool com classes ontológicas extraídas de uma ontologia também fornecida por outra tool.",
+    goal="Comparar os conceitos extraídos adiquiridos de um artigo com uma lista de classes ontológicas também adiquirida e listar os conceitos que estão presentes na ontologia e os que estão ausentes.",
     backstory="Você é um doutor especialista em {topic} consegue comparar com precisão conceitos de uma tabela estraída de um artigo com uma lista de classes ontológicas.",
     verbose=True,
     llm=llm,
     max_iter=10,
     memory=True,
-    tools=[]
+    tools=[adquiri_artigo_tool, adquiri_ontologia_tool]
 )
 
 ############# TASK3
@@ -253,15 +191,15 @@ with st.sidebar:
 
     with st.form(key='research_form'):
         topic = st.text_input('Tópico da área de pesquisa')
-        file_pdf = st.text_input('Texto do artigo')
-        file_onto = st.text_input('Texto da ontologia em owl')
+        texto_artigo = st.text_area('Texto do artigo')
+        texto_onto = st.text_area('Texto da ontologia em owl')
         submit_button = st.form_submit_button(label='Submit')
     
 if submit_button:
     if not topic:
         st.error("Por favor, insira o tópico da área de pesquisa.")
     else:
-        results = crew.kickoff(inputs={"topic": topic, "file_pdf": file_pdf, "file_onto": file_onto})
+        results = crew.kickoff(inputs={"topic": topic})
         st.subheader("Relatório da pesquisa:")
         st.write(results['final_output'])
         print(results)
