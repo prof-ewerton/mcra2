@@ -172,8 +172,8 @@ tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia = Task(
 
 
 crew = Crew(
-    agents=[agente_extrator_de_conceitos_de_artigos, agente_extrator_de_classes_de_ontologia, agente_comparador_de_conceitos_com_ontologia],
-    tasks=[tarefa_extrair_conceitos_sobre_um_topico, tarefa_extrair_classes_de_uma_ontologia, tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia],
+    agents=[agente_comparador_de_conceitos_com_ontologia],
+    tasks=[tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia],
     process=Process.sequential,
     verbose=2,
     full_output=True,
