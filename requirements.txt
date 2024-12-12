@@ -1,0 +1,9 @@
+pypdf==4.3.1
+owlready2==0.47
+langchain==0.1.20
+langchain-core==0.1.53
+langchain-google-genai==1.0.1
+langchain-community==0.0.38
+crewai==0.28.8
+crewai-tools==0.0.16
+pysqlite3-binary
