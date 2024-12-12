@@ -7,7 +7,7 @@ from crewai import Agent, Task, Crew, Process
 import streamlit as st
 
 # IMPORTANTO MODELO DE LLM
-os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+os.environ["GOOGLE_API_KEY"] = st.secrets["GEMINI_API_KEY"]
 llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature = 0)
 
 
