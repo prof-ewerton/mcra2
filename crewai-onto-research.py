@@ -4,7 +4,7 @@ from langchain.tools import Tool
 from langchain_google_genai import ChatGoogleGenerativeAI
 from crewai import Agent, Task, Crew, Process
 
-
+import streamlit as st
 
 # IMPORTANTO MODELO DE LLM
 os.environ["GOOGLE_API_KEY"] = "AIzaSyD2iQW2yaa1hxkdueSjTygd3cWCnA-sSkc"
@@ -113,11 +113,11 @@ read_pdf_tool = Tool(
 ############# AGENT1
 agente_extrator_de_conceitos_de_artigos = Agent(
     role="Agente extrator de conceitos do arquivo {file_pdf}",
-    goal="Ler o texto do artigo científico contido no arquivo {file_pdf} e extrair vários conceitos relevantes sotre {topic} para análise subsequente.",
+    goal="Ler o texto do artigo científico contido no arquivo {file_pdf} e extrair vários conceitos relevantes sotre {topic} para análise subsequente por outro agente.",
     backstory="Você é um especialista em {topic} em extrair vários conceitos de artigos científicos. Seu papel é garantir que todos os conceitos relevantes do arquivo {file_pdf} sobre o tema {topic} sejam extraídos com precisão, facilitando a análise subsequente por outros agentes.",
     verbose=True,
     llm=llm,
-    max_iter=5,
+    max_iter=3,
     memory=True,
     tools=[read_pdf_tool]
 )
@@ -131,7 +131,7 @@ tarefa_extrair_conceitos_sobre_um_topico = Task(
     | Concept | Explanation |
     """,
     agent=agente_extrator_de_conceitos_de_artigos,
-    output_file="concepts.md"
+    #output_file="concepts.md"
 )
 
 
@@ -165,21 +165,21 @@ read_onto_tool = Tool(
 ############# AGENT2
 agente_extrator_de_classes_de_ontologia = Agent(
     role="Agente extrator de classes de ontologia do arquivo {file_onto}",
-    goal="Ler uma ontologia no arquivo {file_onto} e extrair uma lista de classes para análise subsequente.",
+    goal="Ler uma ontologia no arquivo {file_onto} e extrair uma lista de classes para análise subsequente por outro agente.",
     backstory="Você é um especialista em ontologia e consegue entregar uma lista de classes para análise subsequente por outros agentes.",
     verbose=True,
     llm=llm,
-    max_iter=5,
+    max_iter=3,
     memory=True,
     tools=[read_onto_tool]
 )
 
 ############# TASK2
 tarefa_extrair_classes_de_uma_ontologia = Task(
-    description="Extrair todas as classes ontológicas de uma ontologia no arquivo {file_onto} para análise subsequente.",
+    description="Extrair todas as classes ontológicas de uma ontologia no arquivo {file_onto} para análise subsequente por outro agente.",
     expected_output="""Retorna um documento em inglês formatado em markdown com uma tabela com duas colunas: Class e Annotation.""",
     agent=agente_extrator_de_classes_de_ontologia,
-    output_file="classes.md"
+    #output_file="classes.md"
 )
 
 
@@ -208,12 +208,12 @@ agente_comparador_de_conceitos_com_ontologia = Agent(
 ############# TASK3
 tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia = Task(
     description="Comparar os conceitos extraídos de um arquivo fornecido por outro agente com uma lista de classes ontológicas também fornecido por outro agente e listar os conceitos que estão presentes na ontologia e os que estão ausentes.",
-    expected_output="""Retorna um documento em inglês formatado em marckdonw contendo:
+    expected_output="""Compila os resultados anteriores sem resumir e retorna um documento em inglês formatado em marckdonw contendo:
     - O título do antigo análisado pelo agente extrator de conceitos,
     - Uma tabela de conceitos extraídos do artigo pelo agente extrator de conceitos,
     - Uma tabela de classes ontológicas e seus respectivos comentários, se houver, fornecida pelo agente extrator de classes de ontologia,
-    - Uma tabela de conceitos do artigo melhor relacionados com as classes ontológicas,
-    - Uma tabela com os conceitos do artigo que não foram possíveis de relacionar com as classes ontollógicas,
+    - Uma tabela de conceitos do artigo melhor relacionados com as classes ontológicas fornecidas pelo agente extrator de classes de ontologia,
+    - Uma tabela com os conceitos do artigo que não foram possíveis de relacionar com as classes ontológicas e uma cópia de sua respectiva explicação da tabela 'conceitos extraídos'.",
     e.g.
     # TITLE: "Title of the article"
     ## CONCEPTS
@@ -223,18 +223,19 @@ tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia = Task(
     ## FOUNDED 
     | concept | class_ontology | relationship_explanation |
     ## NOT FOUNDED
-    | concept | relationship_explanation |
+    | concept | explanation |
     Formatado como markdown sem '```'
-    Para compor o documento, utilize a informação fornecida pelos outros agentes não faça nada hipotético.""",
+    Para compor o documento, utilize as informações fornecidas pelos outros agentes, não faça nada hipotético.
+    Preencha todos os tópicos do exemplo.""",
     agent=agente_comparador_de_conceitos_com_ontologia,
-    output_file="report.md"
+    #output_file="report.md"
 )
 
 
 
 crew = Crew(
-    agents=[agente_comparador_de_conceitos_com_ontologia, agente_extrator_de_conceitos_de_artigos, agente_extrator_de_classes_de_ontologia],
-    tasks=[tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia, tarefa_extrair_conceitos_sobre_um_topico, tarefa_extrair_classes_de_uma_ontologia],
+    agents=[agente_extrator_de_conceitos_de_artigos, agente_extrator_de_classes_de_ontologia, agente_comparador_de_conceitos_com_ontologia],
+    tasks=[tarefa_extrair_conceitos_sobre_um_topico, tarefa_extrair_classes_de_uma_ontologia, tarefa_listar_conceitos_presentes_e_ausentes_da_ontologia],
     process=Process.sequential,
     verbose=2,
     full_output=True,
@@ -244,5 +245,23 @@ crew = Crew(
 )
 
 
-results = crew.kickoff(inputs={"topic": "learning analytics", "file_pdf": "article3.pdf", "file_onto": "onto.owl"})
-print(results)
+#results = crew.kickoff(inputs={"topic": "learning analytics", "file_pdf": "article3.pdf", "file_onto": "onto.owl"})
+#print(results)
+
+with st.sidebar:
+    st.header("Coloque o tópico da área de pesquisa, o texto do artigo e o texto da ontologia em owl")
+
+    with st.form(key='research_form'):
+        topic = st.text_input('Tópico da área de pesquisa')
+        file_pdf = st.text_input('Texto do artigo')
+        file_onto = st.text_input('Texto da ontologia em owl')
+        submit_button = st.form_submit_button(label='Submit')
+    
+if submit_button:
+    if not topic:
+        st.error("Por favor, insira o tópico da área de pesquisa.")
+    else:
+        results = crew.kickoff(inputs={"topic": topic, "file_pdf": file_pdf, "file_onto": file_onto})
+        st.subheader("Relatório da pesquisa:")
+        st.write(results['final_output'])
+        print(results)
