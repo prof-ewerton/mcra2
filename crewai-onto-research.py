@@ -119,7 +119,7 @@ def entrega_texto_artigo():
 
 adquiri_artigo_tool = Tool(
     name="Ferramenta que adquire um artigo",
-    description="Esta ferramenta retorna um texto de artigo.",
+    description="Esta ferramenta adquire um texto de artigo.",
     func=lambda: entrega_texto_artigo(),
 )
 
@@ -128,14 +128,14 @@ def entrega_texto_ontologia():
 
 adquiri_ontologia_tool = Tool(
     name="Ferramenta que adquire uma ontologia",
-    description="Esta ferramenta retorna um texto de uma ontologia em owl.",
+    description="Esta ferramenta adquire um texto de uma ontologia em owl.",
     func=lambda: entrega_texto_ontologia(),
 )
 
 ############ AGENT3
 agente_comparador_de_conceitos_com_ontologia = Agent(
-    role="Agente comparador de conceitos extraídos de um artigo fornecido por uma tool com classes ontológicas extraídas de uma ontologia também fornecida por outra tool.",
-    goal="Comparar os conceitos extraídos adiquiridos de um artigo com uma lista de classes ontológicas também adiquirida e listar os conceitos que estão presentes na ontologia e os que estão ausentes.",
+    role="Agente comparador de conceitos extraídos de um artigo fornecido por uma tool e classes ontológicas extraídas de uma ontologia também fornecida por outra tool.",
+    goal="Comparar os conceitos adiquiridos de um artigo com uma lista de classes ontológicas também adiquirida e listar os conceitos que estão presentes na ontologia e os que estão ausentes.",
     backstory="Você é um doutor especialista em {topic} consegue comparar com precisão conceitos de uma tabela estraída de um artigo com uma lista de classes ontológicas.",
     verbose=True,
     llm=llm,
