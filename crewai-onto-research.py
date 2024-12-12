@@ -8,7 +8,7 @@ import streamlit as st
 
 # IMPORTANTO MODELO DE LLM
 os.environ["GOOGLE_API_KEY"] = st.secrets["GEMINI_API_KEY"]
-llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature = 0)
+llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature = 1)
 
 
 
