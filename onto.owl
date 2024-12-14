@@ -13,6 +13,18 @@
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     <Declaration>
+        <Class IRI="#Active_Data"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Active_Stakeholder"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Passive_Data"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Passive_Stakeholder"/>
+    </Declaration>
+    <Declaration>
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Act"/>
     </Declaration>
     <Declaration>
@@ -115,6 +127,22 @@
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Way"/>
     </Declaration>
     <SubClassOf>
+        <Class IRI="#Active_Data"/>
+        <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Active"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Active_Stakeholder"/>
+        <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Active"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Passive_Data"/>
+        <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Passive"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Passive_Stakeholder"/>
+        <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Passive"/>
+    </SubClassOf>
+    <SubClassOf>
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Act"/>
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Data"/>
     </SubClassOf>
@@ -246,6 +274,14 @@
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Way"/>
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Learning_Analytics"/>
     </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Active_Data"/>
+        <Class IRI="#Active_Stakeholder"/>
+    </DisjointClasses>
+    <DisjointClasses>
+        <Class IRI="#Passive_Data"/>
+        <Class IRI="#Passive_Stakeholder"/>
+    </DisjointClasses>
     <DisjointClasses>
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Administrator"/>
         <Class IRI="http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Government"/>
@@ -283,8 +319,163 @@
     </DisjointClasses>
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Active_Data</IRI>
+        <Literal>Active stakeholder: This would refer to a stakeholder who is actively involved in generating data or directly influencing the learning process. For instance, a student actively participating in online discussions or a teacher actively monitoring student progress through a learning management system would be considered active stakeholders.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Active_Stakeholder</IRI>
+        <Literal>Active data: This refers to data that is constantly changing and being updated, as opposed to static data which is fixed. Examples might include real-time tracking of student engagement or dynamically adjusting learning pathways based on immediate performance.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Passive_Data</IRI>
+        <Literal>Passive data: This contrasts with &quot;active data.&quot; Passive data is collected without direct interaction or action from the learner. Examples would be data automatically logged by a system without any direct input from the user, such as login times or page views.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Passive_Stakeholder</IRI>
+        <Literal>Passive stakeholder: This refers to a stakeholder whose involvement in the learning process is indirect or observational. For example, a researcher analyzing aggregated data without actively influencing the learning environment would be a passive stakeholder. A student who is passively observing a lesson but not actively participating is another example.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Act</IRI>
+        <Literal>&quot;act&quot; or &quot;activity&quot; refers to the actions performed by stakeholders (students, teachers, administrators etc.) within the learning environment. These actions generate data which is then collected and analyzed. Examples of activities include a student reading a document, a teacher giving a lesson, or an administrator changing course settings. The activities are central to the process of gathering data for learning analytics.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Active</IRI>
+        <Literal>&quot;active&quot; likely describes the nature of the data or the role of a stakeholder.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Adaptive</IRI>
+        <Literal>Adaptive: Using analytics to personalize the learning experience for individual students, adjusting the learning pathway or content based on their progress and needs.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Administrator</IRI>
+        <Literal>Administrators: Those managing the educational institution or program.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Context</IRI>
+        <Literal>&quot;context&quot; in the context of learning analytics refers to the environment where educational activities occur. This can be either a physical environment (like a classroom) or a digital environment (like a learning management system). The context encompasses the setting within which learning and teaching take place and influences how those activities are performed and what data is generated.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Data</IRI>
+        <Literal>&quot;data&quot; in the context of learning analytics refers to the information generated by the activities of stakeholders (students, teachers, etc.) within a specific learning environment. This data can be static (like learner profiles) or dynamic (like interactions with learning materials), and it&apos;s collected by various instruments and then used for analysis to gain insights into the learning process and improve teaching and learning.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Developer</IRI>
+        <Literal>Developers: Those creating and maintaining the technology used for learning analytics.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Digital</IRI>
+        <Literal>A learning management system (LMS), online forums, virtual reality learning spaces, or any digital platform used for teaching and learning.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Dynamic</IRI>
+        <Literal>&quot;dynamic data&quot; refers to data that changes over time. It&apos;s the opposite of static data.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Environment</IRI>
+        <Literal>&quot;environment&quot; refers to the setting or context in which learning and teaching take place. This can encompass both physical and digital spaces.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Government</IRI>
+        <Literal>Governors: Individuals or groups involved in setting the overarching policies and direction of education.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Hybrid</IRI>
+        <Literal>&quot;hybrid environment&quot; would refer to a learning setting that combines both physical and digital spaces. Students might be physically present in a classroom but also use digital tools and platforms (like laptops, tablets, online learning materials, discussion boards, or virtual reality simulations) as integral parts of their learning experience. The data collected in this type of environment would be a mixture of data generated in the physical space (e.g., teacher observation notes) and digital space (e.g., online interactions). Analysis of such data would require considering the interaction between physical and digital components of the learning experience.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Instrument</IRI>
+        <Literal>&quot;instrument&quot; refers to any tool or method used to collect data on learning activities.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
         <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Learning_Analytics</IRI>
         <Literal>Learning analytics is an area of research and practice that uses computational analysis of learning process data to better understand and improve learning.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Method</IRI>
+        <Literal>&quot;method&quot; refers to the approach or procedure used to conduct the research and build the ontology of learning analytics.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Objective</IRI>
+        <Literal>&quot;objective&quot; refers to the intended goals or aims of using learning analytics.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Outcome</IRI>
+        <Literal>&quot;outcome&quot; refers to the result or consequence of a learning activity or intervention. These outcomes are often measured using data collected through learning analytics.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Passive</IRI>
+        <Literal>&quot;passive&quot; likely describes the nature of data collection or a stakeholder&apos;s role</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Physical</IRI>
+        <Literal>A traditional classroom, a laboratory, or any physical space where learning activities occur.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Predictive</IRI>
+        <Literal>Predictive: Utilizing analytics to forecast future outcomes, such as predicting student success or identifying students at risk of falling behind.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Reflective</IRI>
+        <Literal>Reflective: Employing analytics to help students and teachers reflect on their learning and teaching processes. This involves using data to gain insights and improve future performance.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Researcher</IRI>
+        <Literal>Individual studying the effectiveness of learning and teaching practices.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Stakeholder</IRI>
+        <Literal>&quot;stakeholder&quot; refers to any individual or group that has an interest in or is affected by the learning process.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Static</IRI>
+        <Literal>&quot;static data&quot; refers to data that doesn&apos;t change frequently or at all during a specific timeframe of analysis. It represents a snapshot of information at a particular point in time.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Student</IRI>
+        <Literal>Individuals providing additional support and guidance to learners.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Teacher</IRI>
+        <Literal>Those responsible for designing and delivering instruction.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Technique</IRI>
+        <Literal>&quot;technique&quot; refers to the specific tools and procedures used within the broader methods to achieve particular aspects of the research. While &quot;method&quot; describes the overall research approach, &quot;technique&quot; refers to the more granular, practical steps involved.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>http://www.semanticweb.org/netro/ontologies/2024/9/untitled-ontology-3#Technology</IRI>
+        <Literal>&quot;technology&quot; refers broadly to the tools and systems used to support learning and the collection and analysis of data related to learning.</Literal>
     </AnnotationAssertion>
 </Ontology>
 
